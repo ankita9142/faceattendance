@@ -3,7 +3,7 @@ import pymongo
 
 
 # MongoDB Connection
-myclient = pymongo.MongoClient("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.8.2")
+myclient = pymongo.MongoClient("mongodb+srv://Ankita_9241:<db_password>@cluster0.hngpsnl.mongodb.net/?appName=Cluster0")
 
 mydb = myclient["face"]
 my = mydb["user_info"]
