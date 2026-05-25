@@ -9,16 +9,6 @@ myclient = pymongo.MongoClient("mongodb://127.0.0.1:27017/?directConnection=true
 mydb = myclient["face"]
 my=mydb["user_info"]
 
-st.markdown("""
-<style>
-
-.stApp {
-    background: linear-gradient(to right, #141e30, #243b55);
-}
-
-</style>
-""", unsafe_allow_html=True)
-
 
 
 
