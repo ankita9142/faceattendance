@@ -1,6 +1,6 @@
 import streamlit as st
 import pymongo
-myclient = pymongo.MongoClient("mongodb+srv://Ankita_9241:<db_password>@cluster0.hngpsnl.mongodb.net/?appName=Cluster0")
+myclient = pymongo.MongoClient("mongodb+srv://Ankita_9241:Ankita@cluster0.hngpsnl.mongodb.net/?appName=Cluster0")
 mydb = myclient["face"]
 my=mydb["user_info"]
 
