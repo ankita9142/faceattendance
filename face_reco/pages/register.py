@@ -5,7 +5,7 @@ import os
 import uuid
 
 
-myclient = pymongo.MongoClient("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.8.2")
+myclient = pymongo.MongoClient("mongodb+srv://siyuapiyu_db_user:TMDkWYaeLSHfUi44@cluster0.hngpsnl.mongodb.net/?ConneappName=Cluster0")
 mydb = myclient["face"]
 my=mydb["user_info"]
 
