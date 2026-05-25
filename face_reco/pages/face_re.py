@@ -6,9 +6,7 @@ import pandas as pd
 from datetime import datetime
 
 # ================= MONGODB =================
-myclient = pymongo.MongoClient(
-    "mongodb://127.0.0.1:27017/"
-)
+myclient = pymongo.MongoClient("mongodb+srv://Ankita_9241:<db_password>@cluster0.hngpsnl.mongodb.net/?appName=Cluster0")
 
 mydb = myclient["face"]
 
