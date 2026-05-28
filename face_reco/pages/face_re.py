@@ -55,87 +55,81 @@ registered_img_path = user["photo"]
 web_cam = st.camera_input("Take Attendance Photo")
 
 # ================= MATCH FUNCTION =================
+    x, y, w, h = live_faces[0]
+
+    x2, y2, w2, h2 = reg_faces[0]
+
 def compare_faces():
 
-    # ================= SAVE LIVE IMAGE =================
-
-    temp_file = tempfile.NamedTemporaryFile(
-        delete=False,
-        suffix=".png"
+    file_bytes = np.asarray(
+        bytearray(web_cam.read()),
+        dtype=np.uint8
     )
 
-    temp_file.write(web_cam.getvalue())
+    live_img = cv2.imdecode(file_bytes, 1)
 
-    live_image_path = temp_file.name
+    gray_live = cv2.cvtColor(
+        live_img,
+        cv2.COLOR_BGR2GRAY
+    )
 
-    # ================= CHECK REGISTERED IMAGE =================
+    live_faces = face_cascade.detectMultiScale(
+        gray_live,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(100,100)
+    )
 
-    if registered_img_path == "":
+    reg_img = cv2.imread(registered_img_path)
 
-        st.error("No Registered Image Found")
+    gray_reg = cv2.cvtColor(
+        reg_img,
+        cv2.COLOR_BGR2GRAY
+    )
 
-        return
+    reg_faces = face_cascade.detectMultiScale(
+        gray_reg,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(100,100)
+    )
 
-    try:
+    if len(live_faces) > 0 and len(reg_faces) > 0:
 
-        # ================= FACE VERIFY =================
+        st.success("✅ Face Detected Successfully")
 
-        result = DeepFace.verify(
+        # MARK ATTENDANCE
+        now = datetime.now()
 
-            img1_path=registered_img_path,
-            img2_path=live_image_path,
+        date = now.strftime("%d-%m-%Y")
+        time = now.strftime("%H:%M:%S")
 
-            enforce_detection=False
+        already = attendance_col.find_one({
+            "name": name,
+            "date": date
+        })
 
-        )
+        if already:
 
-        # ================= MATCHED =================
-
-        if result["verified"]:
-
-            st.success("✅ Face Matched Successfully")
-
-            now = datetime.now()
-
-            date = now.strftime("%d-%m-%Y")
-
-            time = now.strftime("%H:%M:%S")
-
-            already = attendance_col.find_one({
-
-                "name": name,
-                "date": date
-
-            })
-
-            if already:
-
-                st.warning("Attendance Already Marked")
-
-            else:
-
-                attendance_col.insert_one({
-
-                    "name": name,
-                    "date": date,
-                    "time": time,
-                    "status": "Present"
-
-                })
-
-                st.success("✅ Attendance Marked Successfully")
-
-                st.balloons()
-
-        # ================= NOT MATCHED =================
+            st.warning("Attendance Already Marked")
 
         else:
 
-            st.error("❌ Face Not Matched")
+            attendance_col.insert_one({
 
-    except Exception as e:
-        
-        st.error(f"Error : {e}")
+                "name": name,
+                "date": date,
+                "time": time,
+                "status": "Present"
+
+            })
+
+            st.success("✅ Attendance Marked Successfully")
+
+    else:
+
+        st.error("❌ No Face Detected")
+
 # ================= BUTTON =================
 if st.button("MARK ATTENDANCE"):
 
@@ -171,3 +165,4 @@ if len(data) > 0:
 else:
 
     st.warning("No Attendance Found")
+
